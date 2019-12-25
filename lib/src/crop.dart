@@ -19,6 +19,7 @@ class Crop extends StatefulWidget {
   final double maximumScale;
   final bool alwaysShowGrid;
   final ImageErrorListener onImageError;
+  final bool showHandles;
 
   const Crop({
     Key key,
@@ -27,9 +28,11 @@ class Crop extends StatefulWidget {
     this.maximumScale = 2.0,
     this.alwaysShowGrid = false,
     this.onImageError,
+    this.showHandles: true,
   })  : assert(image != null),
         assert(maximumScale != null),
         assert(alwaysShowGrid != null),
+        assert(showHandles != null),
         super(key: key);
 
   Crop.file(
@@ -40,9 +43,11 @@ class Crop extends StatefulWidget {
     this.maximumScale = 2.0,
     this.alwaysShowGrid = false,
     this.onImageError,
+    this.showHandles: true,
   })  : image = FileImage(file, scale: scale),
         assert(maximumScale != null),
         assert(alwaysShowGrid != null),
+        assert(showHandles != null),
         super(key: key);
 
   Crop.asset(
@@ -54,9 +59,11 @@ class Crop extends StatefulWidget {
     this.maximumScale = 2.0,
     this.alwaysShowGrid = false,
     this.onImageError,
+    this.showHandles: true,
   })  : image = AssetImage(assetName, bundle: bundle, package: package),
         assert(maximumScale != null),
         assert(alwaysShowGrid != null),
+        assert(showHandles != null),
         super(key: key);
 
   @override
@@ -193,6 +200,7 @@ class CropState extends State<Crop> with TickerProviderStateMixin, Drag {
               area: _area,
               scale: _scale,
               active: _activeController.value,
+              drawHandles: widget.showHandles,
             ),
           ),
         ),
@@ -357,7 +365,9 @@ class CropState extends State<Crop> with TickerProviderStateMixin, Drag {
     _settleController.stop(canceled: false);
     _lastFocalPoint = details.focalPoint;
     _action = _CropAction.none;
-    _handle = _hitCropHandle(_getLocalPoint(details.focalPoint));
+    _handle = widget.showHandles
+        ? _hitCropHandle(_getLocalPoint(details.focalPoint))
+        : _CropHandleSide.none;
     _startScale = _scale;
     _startView = _view;
   }
@@ -560,6 +570,7 @@ class _CropPainter extends CustomPainter {
   final Rect area;
   final double scale;
   final double active;
+  final bool drawHandles;
 
   _CropPainter({
     this.image,
@@ -568,6 +579,7 @@ class _CropPainter extends CustomPainter {
     this.area,
     this.scale,
     this.active,
+    this.drawHandles = true,
   });
 
   @override
@@ -639,7 +651,7 @@ class _CropPainter extends CustomPainter {
 
     if (!boundaries.isEmpty) {
       _drawGrid(canvas, boundaries);
-      _drawHandles(canvas, boundaries);
+      if (drawHandles) _drawHandles(canvas, boundaries);
     }
 
     canvas.restore();
