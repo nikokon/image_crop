@@ -3,8 +3,9 @@ part of image_crop;
 class ImageOptions {
   final int width;
   final int height;
+  final int orientation;
 
-  ImageOptions({this.width, this.height})
+  ImageOptions({this.width, this.height, this.orientation})
       : assert(width != null),
         assert(height != null);
 
@@ -15,12 +16,12 @@ class ImageOptions {
   bool operator ==(other) {
     return other is ImageOptions &&
         other.width == width &&
-        other.height == height;
+        other.height == height && other.orientation == orientation;
   }
 
   @override
   String toString() {
-    return '$runtimeType(width: $width, height: $height)';
+    return '$runtimeType(width: $width, height: $height, orientation: $orientation)';
   }
 }
 
@@ -41,6 +42,7 @@ class ImageCrop {
     return ImageOptions(
       width: result['width'],
       height: result['height'],
+      orientation: result['orientation'],
     );
   }
 

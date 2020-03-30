@@ -221,9 +221,11 @@
 
         NSNumber* width = (NSNumber*) CFDictionaryGetValue(properties, kCGImagePropertyPixelWidth);
         NSNumber* height = (NSNumber*) CFDictionaryGetValue(properties, kCGImagePropertyPixelHeight);
+        NSNumber* orientation = (NSNumber*) CFDictionaryGetValue(properties, kCGImagePropertyOrientation);
+
         CFRelease(properties);
 
-        result(@{ @"width": width,  @"height": height });
+        result(@{ @"width": width,  @"height": height,  @"orientation": orientation != nil ? orientation : [NSNumber numberWithInt:1]   });
     }];
 }
 
