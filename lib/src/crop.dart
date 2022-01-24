@@ -28,6 +28,7 @@ class Crop extends StatefulWidget {
     this.maximumScale = 2.0,
     this.alwaysShowGrid = false,
     this.onImageError,
+    this.showHandles = true,
   }) : super(key: key);
 
   Crop.file(
